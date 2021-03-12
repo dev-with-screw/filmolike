@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration page</title>
+</head>
+<body>
+    <h1>Регистрация</h1>
+
+    <div>
+        <form th:action="@{/registration}" method="post">
+            <div><label>Login: <input type="text" name="username"></label></div>
+            <div><label>Password: <input type="password" name="password"></label></div>
+            <div style="color:#FF0000" th:if="${userExists}">
+                Пользователь с таким логином уже существует.
+            </div>
+
+            <div><input type="submit" value="Зарегистрировать"></div>
+        </form>
+    </div>
+
+<!--    <div>-->
+<!--        <form th:action="@{/registration}" method="post" th:object="${user}">-->
+<!--            <div><label>Login: <input type="text" name="username" th:field="*{username}"></label></div>-->
+<!--            <div><label>Password: <input type="password" name="password" th:field="*{password}"></label></div>-->
+<!--            &lt;!&ndash;            <div style="color:#FF0000" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">username error</div>&ndash;&gt;-->
+<!--            &lt;!&ndash;            <div style="color:#FF0000" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">password error</div>&ndash;&gt;-->
+<!--            <div style="color:#FF0000" th:if="${userExists}">-->
+<!--                Пользователь с таким логином уже существует.-->
+<!--            </div>-->
+
+<!--            <div><input type="submit" value="Зарегистрировать"></div>-->
+<!--        </form>-->
+<!--    </div>-->
+</body>
+</html>

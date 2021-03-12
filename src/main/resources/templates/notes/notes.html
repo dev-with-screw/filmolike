@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My notes</title>
+</head>
+<body>
+    <div>
+        <h1 th:inline="text"> Добро пожаловать, [[${#httpServletRequest.remoteUser}]]!</h1>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign out">
+        </form>
+    </div>
+    <div align="center">
+        <h1>Мои заметки</h1>
+        <br/>
+
+        <a href="/notes/new">Добавить новую заметку</a>
+        <br/><br/>
+
+        <table border="1" cellpadding="10">
+            <thead>
+            <tr>
+                <th>
+                    <a th:href="@{'/notes/page/' + ${currentPage} + '?sortField=title&sortDir=' + ${reverseSortDir}}">Заметка</a>
+                </th>
+                <th>
+                    Просмотрен
+                </th>
+                <th>
+                    <a th:href="@{'/notes/page/' + ${currentPage} + '?sortField=estimate&sortDir=' + ${reverseSortDir}}">Оценка</a>
+                </th>
+
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="note : ${notes}">
+                <td>
+                    <a th:href="@{'/notes/' + ${note.id}}" th:text="${note.title}">note title</a>
+                </td>
+                <td th:text="${note.watched}? 'Да' : 'Нет'">yes/no</td>
+                <td th:text="${note.estimate}">estimate</td>
+                <td>
+                    <form th:method="DELETE" th:action="@{'/notes/' + ${note.id}}">
+                        <button type="submit">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br/>
+
+    <div><i>Sorted by [[${sortField}]] in [[${sortDir}]] order</i></div>
+    <br/>
+
+    <div th:if="${totalPages > 1}">
+        Всего заметок: [[${totalItems}]]
+        <br/>
+
+        <a th:if="${currentPage > 1}" th:href="@{'/notes/page/1' + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">First</a>
+        <span th:unless="${currentPage > 1}">Первая</span>
+
+        <a th:if="${currentPage > 1}" th:href="@{'/notes/page/' + ${currentPage - 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Previous</a>
+        <span th:unless="${currentPage > 1}">Предыдущая</span>
+
+        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                <a th:if="${currentPage != i}" th:href="@{'/notes/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+                <span th:unless="${currentPage != i}">[[${i}]]</span>
+        </span>
+
+        <a th:if="${currentPage < totalPages}" th:href="@{'/notes/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+        <span th:unless="${currentPage < totalPages}">Следующая</span>
+
+        <a th:if="${currentPage < totalPages}" th:href="@{'/notes/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+        <span th:unless="${currentPage < totalPages}">Последняя</span>
+    </div>
+</body>
+</html>

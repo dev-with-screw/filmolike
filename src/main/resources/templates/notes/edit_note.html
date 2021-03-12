@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Edit note</title>
+</head>
+<body>
+<div align="center">
+	<h1>Редактирование заметки</h1>
+	<br />
+
+	<a href="/notes">Вернуться к списку заметок</a>
+	<br/><br/>
+
+	<form action="#" th:action="@{'/notes/' + ${note.id}}" th:object="${note}"
+		  th:method="PUT">
+		<div th:text="*{id}"></div>
+		<table border="2" cellpadding="10">
+			<tr>
+				<td>
+					<label for="title">Заголовок</label>
+					<div style="color:#FF0000" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">title error</div>
+				</td>
+				<td>
+					<input type="text" id="title" th:field="*{title}" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="watched">Просмотрен?</label>
+				</td>
+				<td>
+					<input type="checkbox" id="watched" name="watched" th:checked="*{watched}" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="estimate">Оценка</label>
+				</td>
+				<td>
+					<select id="estimate" name="estimate">
+						<option th:each="estimateOpt : ${T(home.work.filmolike.domain.Estimate).values()}"
+								th:value="${estimateOpt}" th:text="${estimateOpt}">estimate</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+
+		<input type="submit" value="Сохранить"/>
+		<form action="#" th:action="@{'/notes/' + ${note.id}}">
+			<input type="submit" value="Отмена"/>
+		</form>
+	</form>
+</div>
+</body>
+</html>
