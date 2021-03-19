@@ -5,11 +5,18 @@
     <title>My notes</title>
 </head>
 <body>
+
     <div>
-        <h1 th:inline="text"> Добро пожаловать, [[${#httpServletRequest.remoteUser}]]!</h1>
-        <form th:action="@{/logout}" method="post">
-            <input type="submit" value="Sign out">
-        </form>
+        <table>
+            <tr>
+                <td th:inline="text"> Добро пожаловать, [[${#httpServletRequest.remoteUser}]]!</td>
+                <td>
+                    <form th:action="@{/logout}" method="post">
+                        <input type="submit" value="Sign out">
+                    </form>
+                </td>
+            </tr>
+        </table>
     </div>
     <div align="center">
         <h1>Мои заметки</h1>
@@ -24,13 +31,13 @@
                 <th>
                     <a th:href="@{'/notes/page/' + ${currentPage} + '?sortField=title&sortDir=' + ${reverseSortDir}}">Заметка</a>
                 </th>
-                <th>
-                    Просмотрен
-                </th>
+                <th>Просмотрен</th>
                 <th>
                     <a th:href="@{'/notes/page/' + ${currentPage} + '?sortField=estimate&sortDir=' + ${reverseSortDir}}">Оценка</a>
                 </th>
-
+                <th>
+                    <a th:href="@{'/notes/page/' + ${currentPage} + '?sortField=changed&sortDir=' + ${reverseSortDir}}">Изменен</a>
+                </th>
                 <th>Действия</th>
             </tr>
             </thead>
@@ -41,6 +48,7 @@
                 </td>
                 <td th:text="${note.watched}? 'Да' : 'Нет'">yes/no</td>
                 <td th:text="${note.estimate}">estimate</td>
+                <td th:text="${note.changed}">changed</td>
                 <td>
                     <form th:method="DELETE" th:action="@{'/notes/' + ${note.id}}">
                         <button type="submit">Удалить</button>

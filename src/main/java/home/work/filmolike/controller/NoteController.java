@@ -1,10 +1,12 @@
 package home.work.filmolike.controller;
 
 import home.work.filmolike.domain.Note;
+import home.work.filmolike.domain.User;
 import home.work.filmolike.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,15 +29,17 @@ public class NoteController {
     }
 
     @GetMapping
-    public String forward(Model model) {
-        return showNotes(model, pageNum, "id", "asc");
+    public String forward(@AuthenticationPrincipal User user,
+                          Model model) {
+        return showNotes(user, model, pageNum, "id", "asc");
     }
 
     @GetMapping("/page/{pageNum}")
-    public String showNotes(Model model,
-                               @PathVariable("pageNum") int pageNum,
-                               @Param("sortField") String sortField,
-                               @Param("sortDir") String sortDir) {
+    public String showNotes(@AuthenticationPrincipal User user,
+                            Model model,
+                            @PathVariable("pageNum") int pageNum,
+                            @Param("sortField") String sortField,
+                            @Param("sortDir") String sortDir) {
         this.pageNum = pageNum;
 
         Page<Note> page = service.findSeveral(pageNum, sortField, sortDir);
@@ -67,12 +71,15 @@ public class NoteController {
     }
 
     @PostMapping
-    public String saveNote(@Valid Note note, BindingResult bindingResult) {
+    public String saveNote(@AuthenticationPrincipal User user,
+                           @Valid Note note,
+                           BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             return "/notes/new_note";
         }
-        Long noteId = service.save(note);
-        return String.format("redirect:/notes/%d", noteId.intValue());
+        note.setUser(user);
+        service.save(note);
+        return "redirect:/notes";
     }
 
     @GetMapping("/{id}/edit")
@@ -83,14 +90,15 @@ public class NoteController {
     }
 
     @PutMapping("/{id}")
-    public String updateNote(@PathVariable("id") Long id,
-                         @ModelAttribute("note") Note note,
-                         BindingResult bindingResult) {
+    public String updateNote(@AuthenticationPrincipal User user,
+                             @PathVariable("id") Long id,
+                             @ModelAttribute("note") Note note,
+                             BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             return "notes/edit_note";
         }
         service.save(note);
-        return String.format("redirect:/notes/%d", id.intValue());
+        return "redirect:/notes";
     }
 
     @DeleteMapping("/{id}")
@@ -98,4 +106,8 @@ public class NoteController {
         service.delete(id);
         return "redirect:/notes";
     }
+
+
+
+
 }

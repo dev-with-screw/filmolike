@@ -29,7 +29,13 @@ public class RegistrationController {
     public String addUser(@Valid User user,
                           BindingResult bindingResult,
                           Model model) {
-        if(bindingResult.hasErrors()) {
+
+        if (bindingResult.hasErrors()) {
+            return "registration";
+        }
+
+        if (!user.getPassword().equals(user.getPasswordConfirm())) {
+            model.addAttribute("errorMessage", "Пароли не совпадают");
             return "registration";
         }
 
@@ -38,7 +44,7 @@ public class RegistrationController {
         if (isAdded) {
             return "registration-confirmed";
         } else {
-            model.addAttribute("userExists", "userExists");
+            model.addAttribute("errorMessage", "Пользователь с таким именем уже существует");
             return "registration";
         }
     }

@@ -22,13 +22,13 @@ public class WebSecurityConfigTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@Test
-	public void testZeroEndpoint() throws Exception{
-		this.mockMvc.perform(get("/"))
-				.andDo(print())
-				.andExpect(status().isOk())
-				.andExpect(content().string(containsString("Добро пожаловать на мой пет проект!")));
-	}
+//	@Test
+//	public void testZeroEndpoint() throws Exception{
+//		this.mockMvc.perform(get("/"))
+//				.andDo(print())
+//				.andExpect(status().isOk())
+//				.andExpect(content().string(containsString("Добро пожаловать на мой пет проект!")));
+//	}
 
 	@Test
 	public void testHomeEndpoint() throws Exception{

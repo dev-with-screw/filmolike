@@ -10,6 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @Transactional
 public class NoteService {
@@ -29,10 +31,12 @@ public class NoteService {
         return repo.findAll(pageable);
     }
 
-    public Long save(Note note) {
-        Note savedNote = repo.save(note);
-        return savedNote.getId();
+    public void save(Note note) {
+        note.setChanged(LocalDateTime.now());
+        repo.save(note);
     }
+
+
 
     public Note get(long id) {
         return repo.getOne(id);

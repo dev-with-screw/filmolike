@@ -4,16 +4,18 @@ import home.work.filmolike.domain.Estimate;
 import home.work.filmolike.domain.User;
 
 
-public class NotesDto {
+public class NoteDto {
     private Long id;
     private String title;
     private boolean watched;
     private Estimate estimate;
+    private String changed;
+    private String username;
 
-    public NotesDto() {
+    public NoteDto() {
     }
 
-    public NotesDto(Long id, String title, boolean watched, Estimate estimate) {
+    public NoteDto(Long id, String title, boolean watched, Estimate estimate) {
         this.id = id;
         this.title = title;
         this.watched = watched;

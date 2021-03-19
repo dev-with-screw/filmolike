@@ -1,4 +1,4 @@
-package home.work.filmolike.config.controller;
+package home.work.filmolike.controller;
 
 public class NoteControllerTest {
 }

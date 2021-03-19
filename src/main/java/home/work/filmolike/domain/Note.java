@@ -1,8 +1,10 @@
 package home.work.filmolike.domain;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -10,12 +12,19 @@ public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    @Size(min=2, max=50, message = "от 2 до 50 символов")
+    @NotBlank(message = "Поле не должно быть пустым")
+    @Length(max=50, message = "Должно содержать не более 50 символов")
     private String title;
     private boolean watched;
     @Enumerated(EnumType.STRING)
     private Estimate estimate;
+    @Basic
+    private LocalDateTime changed;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @OneToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "note")
     private List<Commentary> commentary;
     @OneToOne(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY)
@@ -55,6 +64,22 @@ public class Note {
 
     public void setEstimate(Estimate estimate) {
         this.estimate = estimate;
+    }
+
+    public LocalDateTime getChanged() {
+        return changed;
+    }
+
+    public void setChanged(LocalDateTime changed) {
+        this.changed = changed;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public List<Commentary> getCommentary() {
