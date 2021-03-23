@@ -31,7 +31,7 @@ public class NoteController {
     @GetMapping
     public String forward(@AuthenticationPrincipal User user,
                           Model model) {
-        return showNotes(user, model, pageNum, "id", "asc");
+        return showNotes(user, model, pageNum, "changed", "desc");
     }
 
     @GetMapping("/page/{pageNum}")

@@ -40,7 +40,7 @@
 				<td>
 					<select id="estimate" name="estimate">
 						<option th:each="estimateOpt : ${T(home.work.filmolike.domain.Estimate).values()}"
-								th:value="${estimateOpt}" th:text="${estimateOpt}">estimate</option>
+								th:value="${estimateOpt}" th:text="${estimateOpt}" th:selected="${estimateOpt==note.estimate}">estimate</option>
 					</select>
 				</td>
 			</tr>

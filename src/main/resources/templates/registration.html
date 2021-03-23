@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org-thymeleaf-exstras-springsecurity3">
+
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
@@ -9,7 +11,7 @@
     <br/>
     <div>
         <form th:action="@{/registration}" method="post">
-            <div><label>Логин: <input type="text" name="username" th:text="${username}"></label></div>
+            <div><label>Логин: <input type="text" name="username"></label></div>
             <div><label>Пароль: <input type="password" name="password"></label></div>
             <div><label>Подтверждение пароля: <input type="password" name="passwordConfirm"></label></div>
             <div style="color:#FF0000" th:text="${errorMessage}"></div>

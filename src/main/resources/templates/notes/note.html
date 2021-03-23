@@ -35,7 +35,8 @@
 
         <form action="#" th:action="@{'/notes/' + ${note.id}} + '/edit'">
             <input type="submit" value="Редактировать"/>
-        </form><form action="#" th:action="@{'/notes/' + ${note.id}}" th:object="${note}"
+        </form>
+        <form action="#" th:action="@{'/notes/' + ${note.id}}" th:object="${note}"
               th:method="DELETE">
             <input type="submit" value="Удалить"/>
         </form>
