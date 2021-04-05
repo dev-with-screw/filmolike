@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+<body>
+<div th:fragment="header">
+    <div>
+        <table>
+            <tr>
+                <td th:inline="text"> Добро пожаловать, [[${#httpServletRequest.remoteUser}]]!</td>
+                <td>
+                    <form th:action="@{/logout}" method="post">
+                        <input type="submit" value="Sign out">
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

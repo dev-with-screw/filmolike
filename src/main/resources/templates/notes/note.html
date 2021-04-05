@@ -2,45 +2,47 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Note's details</title>
+    <title>Заметка</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 <body>
-<div align="center">
-    <h1>Заметка</h1>
-    <br />
+    <div th:replace="fragments/header :: header"/>
+    <div align="center">
+        <h1>Заметка</h1>
+        <br />
 
-    <a href="/notes">Вернуться к списку заметок</a>
-    <br/><br/>
+        <a href="/notes">Вернуться к списку заметок</a>
+        <br/><br/>
 
-    <table border="2" cellpadding="10">
-        <tr>
-            <td>
-                <label for="title">Заголовок</label>
-            </td>
-            <td id="title" th:text="${note.title}">Title</td>
-        </tr>
-        <tr>
-            <td>
-                <label for="watched">Просмотрен?</label>
-            </td>
-            <td th:text="${note.watched}? 'Да' : 'Нет'" id="watched">yes/no</td>
-        </tr>
-        <tr>
-            <td>
-                <label for="estimate">Оценка</label>
-            </td>
-            <td id="estimate" th:text="${note.estimate}">estimate</td>
-        </tr>
-    </table>
+        <table class="table-content">
+            <tr>
+                <td>
+                    <label for="title">Заголовок</label>
+                </td>
+                <td id="title" th:text="${note.title}">Title</td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="watched">Просмотрен?</label>
+                </td>
+                <td th:text="${note.watched}? 'Да' : 'Нет'" id="watched">yes/no</td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="estimate">Оценка</label>
+                </td>
+                <td id="estimate" th:text="${note.estimate}">estimate</td>
+            </tr>
+        </table>
 
-        <form action="#" th:action="@{'/notes/' + ${note.id}} + '/edit'">
-            <input type="submit" value="Редактировать"/>
-        </form>
-        <form action="#" th:action="@{'/notes/' + ${note.id}}" th:object="${note}"
-              th:method="DELETE">
-            <input type="submit" value="Удалить"/>
-        </form>
+            <form action="#" th:action="@{'/notes/' + ${note.id}} + '/edit'">
+                <input type="submit" value="Редактировать"/>
+            </form>
+            <form action="#" th:action="@{'/notes/' + ${note.id}}" th:object="${note}"
+                  th:method="DELETE">
+                <input type="submit" value="Удалить"/>
+            </form>
 
-</div>
-</body>
+    </div>
+    </body>
 </html>

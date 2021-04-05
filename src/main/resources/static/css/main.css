@@ -1,25 +1,45 @@
+body {
+    color: #4B0082;
+}
 h1 {
-    font-family: sans-serif;
-    font-size: 1.5em;
+    font: solid 1.5em Verdana sans-serif;
+    padding-bottom: 10px;
 }
 
-table {
-    border: 1px solid #6cf;
-    border-collapse: separate;
-    border-spacing: 10px;
+.block {
+    padding-top:5px;
+    padding-bottom:5px;
+}
+.two-btn-nearby {
+    float: left;
+    margin: 2px;
+}
+.error-message {
+    color:red;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+.test {
+    color:yellow;
 }
 
-th {
-    font-weight: strong;
-    color: #039;
-    padding: 10px 15px;
+.table-content {
+    border: 1px solid #eee;
+    margin-bottom: 20px;
 }
-td {
-    color: #669;
-    border-top: 1px solid #e8edff;
-    padding: 10px 15 px;
+.table-content th {
+    font-weight: bold;
+    padding: 10px;
+    background: #efefef;
 }
-
-tr:nth-child(2n) {
-    background: #e8edff;
+.table-content td {
+    padding: 10px;
+    border: 1px solid #eee;
+    text-align: left;
+}
+.table-content tbody tr:nth-child(odd){
+    background: #fff;
+}
+.table-content tbody tr:nth-child(even){
+    background: #f7f7f7;
 }

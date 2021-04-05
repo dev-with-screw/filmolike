@@ -2,101 +2,89 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>My notes</title>
-    <link th:href="@{/css/main.css}" rel="stylesheet" />
+    <title>Мои заметки</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
     <script type="text/javascript" th:src="@{/js/statistics.js}"></script>
     <script th:inline="javascript">
         var countNotes = /*[[${totalItems}]]*/;
     </script>
 </head>
 <body>
-    <div>
-        <table>
-            <tr>
-                <td th:inline="text"> Добро пожаловать, [[${#httpServletRequest.remoteUser}]]!</td>
-                <td>
-                    <form th:action="@{/logout}" method="post">
-                        <input type="submit" value="Sign out">
-                    </form>
-                </td>
-            </tr>
-        </table>
-    </div>
+    <div th:replace="fragments/header :: header"/>
+    <div class="test">test</div>
     <div align="center">
         <h1>Мои заметки</h1>
-        <br/>
-
         <a href="/notes/new">Добавить новую заметку</a>
-        <br/><br/>
-
-        <table>
+        <table class="table-content">
             <thead>
-            <tr>
-                <th>
-                    <a th:href="@{'/notes/page/' + ${currentPage} + '?sortField=title&sortDir=' + ${reverseSortDir}}">Заметка</a>
-                </th>
-                <th>Просмотрен</th>
-                <th>
-                    <a th:href="@{'/notes/page/' + ${currentPage} + '?sortField=estimate&sortDir=' + ${reverseSortDir}}">Оценка</a>
-                </th>
-                <th>
-                    <a th:href="@{'/notes/page/' + ${currentPage} + '?sortField=changed&sortDir=' + ${reverseSortDir}}">Изменен</a>
-                </th>
-                <th>Действия</th>
-            </tr>
+                <tr>
+                    <th>
+                        <a th:href="@{'/notes/page/' + ${currentPage} + '?sortField=title&sortDir=' + ${reverseSortDir}}">Заметка</a>
+                    </th>
+                    <th>Просмотрен</th>
+                    <th>
+                        <a th:href="@{'/notes/page/' + ${currentPage} + '?sortField=estimate&sortDir=' + ${reverseSortDir}}">Оценка</a>
+                    </th>
+                    <th>
+                        <a th:href="@{'/notes/page/' + ${currentPage} + '?sortField=changed&sortDir=' + ${reverseSortDir}}">Изменен</a>
+                    </th>
+                    <th>Действия</th>
+                </tr>
             </thead>
             <tbody>
-            <tr th:each="note : ${notes}">
-                <td>
-                    <a th:href="@{'/notes/' + ${note.id}}" th:text="${note.title}">note title</a>
-                </td>
-                <td th:text="${note.watched}? 'Да' : 'Нет'">yes/no</td>
-                <td th:text="${note.estimate}">estimate</td>
-                <td th:text="${#temporals.format(note.changed, 'dd-MM-yyyy HH:mm')}">date+time</td>
-                <td>
-                    <form action="#" th:action="@{'/notes/' + ${note.id}} + '/edit'">
-                        <input type="submit" value="Редактировать"/>
-                    </form>
-                </td>
-                <td>
-                    <form th:method="DELETE" th:action="@{'/notes/' + ${note.id}}">
-                        <button type="submit">Удалить</button>
-                    </form>
-                </td>
-            </tr>
+                <tr th:each="note : ${notes}">
+                    <td>
+                        <a th:href="@{'/notes/' + ${note.id}}" th:text="${note.title}">note title</a>
+                    </td>
+                    <td th:text="${note.watched}? 'Да' : 'Нет'">yes/no</td>
+                    <td th:text="${note.estimate}">estimate</td>
+                    <td th:text="${#temporals.format(note.changed, 'dd-MM-yyyy HH:mm')}">date+time</td>
+                    <td>
+                        <div>
+                            <form action="#" th:action="@{'/notes/' + ${note.id}} + '/edit'" class="two-btn-nearby">
+                                <input type="submit" value="Редактировать"/>
+                            </form>
+                            <form th:method="DELETE" th:action="@{'/notes/' + ${note.id}}" class="two-btn-nearby">
+                                <button type="submit">Удалить</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
-    </div>
-    <br/>
 
-    <div><i>Sorted by [[${sortField}]] in [[${sortDir}]] order</i></div>
-    <br/>
+        <div class="block">
+            <i>
+                Отсортировано по полю
+                    <span th:if="${sortField} == 'title'"><q>Заметка</q></span>
+                    <span th:if="${sortField} == 'estimate'"><q>Оценка</q></span>
+                    <span th:if="${sortField} == 'changed'"><q>Изменен</q></span>
+                в
+                <span th:text="${sortDir} == 'asc'? 'возрастающем' : 'убывающем'">возрастающем/убывающем</span>
+                порядке
+            </i>
+        </div>
+        <div class="block" th:if="${totalPages > 1}">
+            <a th:if="${currentPage > 1}" th:href="@{'/notes/page/1' + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Первая</a>
+            <span th:unless="${currentPage > 1}">Первая</span>
 
-    <div th:if="${totalPages > 1}">
-        Всего заметок: [[${totalItems}]]
-        <br/>
+            <a th:if="${currentPage > 1}" th:href="@{'/notes/page/' + ${currentPage - 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Предыдущая</a>
+            <span th:unless="${currentPage > 1}">Предыдущая</span>
 
-        <a th:if="${currentPage > 1}" th:href="@{'/notes/page/1' + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">First</a>
-        <span th:unless="${currentPage > 1}">Первая</span>
-
-        <a th:if="${currentPage > 1}" th:href="@{'/notes/page/' + ${currentPage - 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Previous</a>
-        <span th:unless="${currentPage > 1}">Предыдущая</span>
-
-        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
                 <a th:if="${currentPage != i}" th:href="@{'/notes/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
                 <span th:unless="${currentPage != i}">[[${i}]]</span>
-        </span>
+            </span>
 
-        <a th:if="${currentPage < totalPages}" th:href="@{'/notes/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
-        <span th:unless="${currentPage < totalPages}">Следующая</span>
+            <a th:if="${currentPage < totalPages}" th:href="@{'/notes/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Следующая</a>
+            <span th:unless="${currentPage < totalPages}">Следующая</span>
 
-        <a th:if="${currentPage < totalPages}" th:href="@{'/notes/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
-        <span th:unless="${currentPage < totalPages}">Последняя</span>
+            <a th:if="${currentPage < totalPages}" th:href="@{'/notes/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Последняя</a>
+            <span th:unless="${currentPage < totalPages}">Последняя</span>
+        </div>
+        <div class="block">
+            <button type="button" th:onclick="showStatistics(countNotes);">Показать статистику</button>
+        </div>
     </div>
-
-    <div>
-        <button type="button" th:onclick="showStatistics(countNotes);">Показать статистику</button>
-    </div>
-
 </body>
 </html>

@@ -1,29 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-                xmlns:sec="http://www.thymeleaf.org-thymeleaf-exstras-springsecurity3">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Authorization</title>
+    <title>Авторизация</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 <body>
     <h1>Авторизация</h1>
-    <br/>
-    <div>
-        <form th:action="@{/login}" method="post">
-            <div><label>Login: <input type="text" name="username"></label></div>
-            <br/>
-            <div><label>Password: <input type="password" name="password"></label></div>
-            <br/>
-            <div><input type="submit" value="Войти"></div>
-            <br/>
-            <div th:if="${param.error}">
-                Неправильные login и/или password
-            </div>
-        </form>
+    <form action="#" th:action="@{/login}" method="post">
+        <table>
+            <tr>
+                <td>Логин:</td>
+                <td><input type="text" name="username" required="true" autofocus="true"></td>
+            </tr>
+            <tr>
+                <td>Пароль:</td>
+                <td><input type="password" name="password" required="true"></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Войти"></td>
+            </tr>
+        </table>
+    </form>
+    <div class="error-message" th:if="${param.error}">
+        Ошибка: неправильные логин и/или пароль
     </div>
-    <br/>
-    <div>
-        <a href="/registration">Зарегистрироваться</a>
+    <div class="block">
+        Если у вас нет учетной записи, <a href="/registration">зарегистрируйтесь</a>
     </div>
 </body>
 </html>

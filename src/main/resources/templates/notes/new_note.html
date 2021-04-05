@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="utf-8" />
-<title>Create New note</title>
+	<meta charset="utf-8" />
+	<title>Создание заметки</title>
+	<link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 <body>
+	<div th:replace="fragments/header :: header"/>
 	<div align="center">
 		<h1>Создание новой заметки</h1>
 		<br />
@@ -15,7 +17,7 @@
 		<form action="#" th:action="@{/notes}" th:object="${note}"
 			  th:method="POST">
 			<div th:text="*{id}"></div>
-			<table border="2" cellpadding="10">
+			<table class="table-content">
 				<tr>
 					<td>
 						<label for="title">Заголовок</label>

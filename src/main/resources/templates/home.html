@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Home page</title>
+    <link rel="stylesheet" th:href="@{/css/testcss2.css}" />
 </head>
 <body>
     <h1>Добро пожаловать!</h1>
@@ -10,5 +11,7 @@
     <p>Здесь вы можете хранить заметки по фильмам</p>
     <br/>
     <a href="/notes">Перейти к заметкам</a>
+
+    <p class="testclass">test2</p>
 </body>
 </html>

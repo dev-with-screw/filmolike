@@ -1,6 +1,7 @@
 package home.work.filmolike.service;
 
 import home.work.filmolike.domain.Note;
+import home.work.filmolike.domain.User;
 import home.work.filmolike.repository.NoteRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,19 +25,17 @@ public class NoteService {
         this.repo = repo;
     }
 
-    public Page<Note> findSeveral(int pageNum, String sortField, String sortDir) {
+    public Page<Note> findSeveral(User user, int pageNum, String sortField, String sortDir) {
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize,
                 sortDir.equals("asc") ? Sort.by(sortField).ascending() : Sort.by(sortField).descending());
 
-        return repo.findAll(pageable);
+        return repo.findByUser(user, pageable);
     }
 
     public void save(Note note) {
         note.setChanged(LocalDateTime.now());
         repo.save(note);
     }
-
-
 
     public Note get(long id) {
         return repo.getOne(id);
