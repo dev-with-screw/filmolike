@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/css/main.css"/>
+    <title>404</title>
+</head>
+<body>
+    <div th:replace="fragments/header :: header-without-username">
+        Static header
+    </div>
+
+    <h1>Ошибка 404</h1>
+    <div class="block">
+        Извините, страница не найдена
+    </div>
+</body>
+</html>
