@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>Авторизация</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <div th:replace="fragments/header :: header-css" />
 </head>
 <body>
+    <div th:replace="fragments/header :: header-without-username">
+        Static header
+    </div>
+
     <h1>Авторизация</h1>
     <form action="#" th:action="@{/login}" method="post">
         <table>
-            <tr>
-                <td>Логин:</td>
-                <td><input type="text" name="username" required="true" autofocus="true"></td>
-            </tr>
-            <tr>
-                <td>Пароль:</td>
-                <td><input type="password" name="password" required="true"></td>
-            </tr>
-            <tr>
-                <td><input type="submit" value="Войти"></td>
-            </tr>
+            <tbody>
+                <tr>
+                    <td>Логин:</td>
+                    <td><input type="text" name="username" required="true" autofocus="true"></td>
+                </tr>
+                <tr>
+                    <td>Пароль:</td>
+                    <td><input type="password" name="password" required="true"></td>
+                </tr>
+                <tr>
+                    <td>
+                       <input type="submit" value="Войти">
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </form>
     <div class="error-message" th:if="${param.error}">
@@ -28,5 +35,6 @@
     <div class="block">
         Если у вас нет учетной записи, <a href="/registration">зарегистрируйтесь</a>
     </div>
+
 </body>
 </html>

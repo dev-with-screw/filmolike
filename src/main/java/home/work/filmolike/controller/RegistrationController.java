@@ -1,7 +1,10 @@
 package home.work.filmolike.controller;
 
 import home.work.filmolike.domain.User;
+import home.work.filmolike.service.NoteService;
 import home.work.filmolike.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +16,8 @@ import javax.validation.Valid;
 
 @Controller
 public class RegistrationController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
+
     private final UserService userService;
 
     @Autowired
@@ -29,6 +34,8 @@ public class RegistrationController {
     public String addUser(@Valid User user,
                           BindingResult bindingResult,
                           Model model) {
+
+        LOGGER.debug("inside the registration controller");
 
         if (bindingResult.hasErrors()) {
             return "registration";

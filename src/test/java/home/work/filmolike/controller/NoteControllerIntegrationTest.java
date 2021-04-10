@@ -39,6 +39,6 @@ public class NoteControllerIntegrationTest {
         this.mockMvc.perform(get("/notes"))
                 .andDo(print())
                 .andExpect(authenticated())
-                .andExpect(content().string(containsString("Добро пожаловать, user!")));
+                .andExpect(content().string(containsString("Добро пожаловать, u!")));
     }
 }

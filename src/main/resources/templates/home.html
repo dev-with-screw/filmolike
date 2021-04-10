@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Home page</title>
-    <link rel="stylesheet" th:href="@{/css/testcss2.css}" />
+    <title>Домашняя страница</title>
+    <div th:replace="fragments/header :: header-css" />
 </head>
 <body>
-    <h1>Добро пожаловать!</h1>
-    <br/>
-    <p>Здесь вы можете хранить заметки по фильмам</p>
-    <br/>
-    <a href="/notes">Перейти к заметкам</a>
+    <div th:replace="fragments/header :: header-without-username">
+        Static header
+    </div>
 
-    <p class="testclass">test2</p>
+    <h1>Добро пожаловать!</h1>
+    <h2>
+        Здесь вы можете хранить заметки по фильмам
+    </h2>
+    <div class="block">
+        Для продолжения работы - <a href="/login">авторизуйтесь</a>
+    </div>
+    <div class="block">
+        Если у вас нет учетной записи, <a href="/registration">зарегистрируйтесь</a>
+    </div>
 </body>
 </html>

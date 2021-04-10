@@ -1,22 +1,46 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-
+    <div th:fragment="header-css">
+        <meta charset="UTF-8" />
+        <link rel="shortcut icon" type="image/png" href="/images/favicon.png" />
+        <link rel="stylesheet" href="/css/main.css" />
+    </div>
 </head>
 <body>
 <div th:fragment="header">
-    <div>
-        <table>
+    <table class="table-header">
+        <tbody>
+            <tr>
+                <td>
+                    <img src="/images/filmolike.png">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table>
+        <tbody>
             <tr>
                 <td th:inline="text"> Добро пожаловать, [[${#httpServletRequest.remoteUser}]]!</td>
                 <td>
-                    <form th:action="@{/logout}" method="post">
-                        <input type="submit" value="Sign out">
+                    <form action="#" th:action="@{/logout}" method="post">
+                        <input type="submit" value="Выход">
                     </form>
                 </td>
             </tr>
-        </table>
-    </div>
+        </tbody>
+    </table>
+</div>
+<div th:fragment="header-without-username">
+    <table class="table-header">
+        <tbody>
+            <tr>
+                <td>
+                    <img src="/images/filmolike.png">
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>Мои заметки</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <div th:replace="fragments/header :: header-css" />
+
     <script type="text/javascript" th:src="@{/js/statistics.js}"></script>
     <script th:inline="javascript">
         var countNotes = /*[[${totalItems}]]*/;
     </script>
 </head>
 <body>
-    <div th:replace="fragments/header :: header"/>
-    <div class="test">test</div>
-    <div align="center">
+    <div th:replace="fragments/header :: header">
+        Static header
+    </div>
+
+    <div class="div-center">
         <h1>Мои заметки</h1>
+
         <a href="/notes/new">Добавить новую заметку</a>
+
         <table class="table-content">
             <thead>
                 <tr>
@@ -64,6 +68,7 @@
                 порядке
             </i>
         </div>
+
         <div class="block" th:if="${totalPages > 1}">
             <a th:if="${currentPage > 1}" th:href="@{'/notes/page/1' + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Первая</a>
             <span th:unless="${currentPage > 1}">Первая</span>

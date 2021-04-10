@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>test page</title>
+    <div th:replace="fragments/header :: header-css" />
 </head>
 <body>
-$END$
+    <div th:replace="fragments/header :: header-without-username">
+        Static header
+    </div>
+
+    <h1>test page</h1>
 </body>
 </html>

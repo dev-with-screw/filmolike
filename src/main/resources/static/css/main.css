@@ -22,10 +22,19 @@ h1 {
 .test {
     color:yellow;
 }
+.table-header {
+    width: 100%;
+    background: gray;
+}
+.table-header td {
+    align: center;
+}
 
 .table-content {
     border: 1px solid #eee;
     margin-bottom: 20px;
+    width: 65%;
+    margin: auto;
 }
 .table-content th {
     font-weight: bold;
@@ -43,3 +52,12 @@ h1 {
 .table-content tbody tr:nth-child(even){
     background: #f7f7f7;
 }
+.table-con {
+
+}
+
+
+.div-center {
+    text-align: center;
+}
+

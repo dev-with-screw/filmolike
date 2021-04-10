@@ -97,4 +97,16 @@ public class Note {
     public void setFilm(Film film) {
         this.film = film;
     }
+
+    @Override
+    public String toString() {
+        return "Note{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", watched=" + watched +
+                ", estimate=" + estimate +
+                ", changed=" + changed +
+                ", user_id=" + user.getId() +
+                '}';
+    }
 }

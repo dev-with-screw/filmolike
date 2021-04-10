@@ -31,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web
             .ignoring()
             .antMatchers("/css/**")
+            .antMatchers("/images/**")
             .antMatchers("/js/**");
     }
 
@@ -38,9 +39,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/public/**", "/resources/**", "/resources/public/**").permitAll()
                 .antMatchers("/registration").not().fullyAuthenticated() //доступ только для незарегистрированных пользователей
-                .antMatchers("/home").permitAll() //доступ разрешен всем пользователям
+                .antMatchers("/", "/home", "/test").permitAll() //доступ разрешен всем пользователям
                 .anyRequest().authenticated() //доступ к остальным страницам только аутентифицированным пользователям
             .and()
                 .formLogin()
@@ -51,8 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe()
             .and()
                 .logout()
-                .permitAll()
-                .logoutSuccessUrl("/home");
+                .permitAll();
     }
 
     @Override

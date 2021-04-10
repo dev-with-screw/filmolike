@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Ошибка</title>
+    <div th:replace="fragments/header :: header-css" />
 </head>
 <body>
-    Какая-то ошибка
+    <div th:replace="fragments/header :: header">
+        Static header
+    </div>
+
+    <h1>Ошибка</h1>
+    <div class="block">
+        Извините. Что-то пошло не так...
+    </div>
 </body>
 </html>

@@ -2,7 +2,10 @@ package home.work.filmolike.controller;
 
 import home.work.filmolike.domain.Note;
 import home.work.filmolike.domain.User;
+import home.work.filmolike.exception.ForbiddenException;
 import home.work.filmolike.service.NoteService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +24,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/notes")
 public class NoteController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NoteController.class);
 
     private int pageNum = 1;
 
@@ -32,8 +36,11 @@ public class NoteController {
     }
 
     @GetMapping
-    public String forward(@AuthenticationPrincipal User user,
-                          Model model) {
+    public String forward(
+            @AuthenticationPrincipal User user,
+            Model model)
+    {
+        LOGGER.info("principal user_id: {}", user.getId());
         return showNotes(user, model, pageNum, "changed", "desc");
     }
 
@@ -43,7 +50,10 @@ public class NoteController {
             Model model,
             @PathVariable("pageNum") int pageNum,
             @Param("sortField") String sortField,
-            @Param("sortDir") String sortDir) {
+            @Param("sortDir") String sortDir)
+    {
+        LOGGER.debug("principal user_id: {}", user.getId());
+
         this.pageNum = pageNum;
 
         Page<Note> page = service.findSeveral(user, pageNum, sortField, sortDir);
@@ -63,7 +73,7 @@ public class NoteController {
         return "notes/notes";
     }
 
-    @GetMapping("/newpag/page/{pageNum}")
+    @GetMapping("/newpage/page/{pageNum}")
     public String showNotesWithNewPagination(
             @AuthenticationPrincipal User user,
             Model model,
@@ -93,8 +103,19 @@ public class NoteController {
 
 
     @GetMapping("/{id}")
-    public String showDetails(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("note", service.get(id));
+    public String showDetails(
+            @AuthenticationPrincipal User user,
+            @PathVariable("id") Long id,
+            Model model) {
+
+        Note note = service.get(id);
+
+        if (!user.equals(note.getUser())) {
+            throw new ForbiddenException();
+        }
+
+        model.addAttribute("note", note);
+
         return "notes/note";
     }
 
@@ -104,21 +125,34 @@ public class NoteController {
     }
 
     @PostMapping
-    public String saveNote(@AuthenticationPrincipal User user,
-                           @Valid Note note,
-                           BindingResult bindingResult) {
+    public String saveNote(
+            @AuthenticationPrincipal User user,
+            @Valid Note note,
+            BindingResult bindingResult)
+    {
         if(bindingResult.hasErrors()) {
             return "/notes/new_note";
         }
+
         note.setUser(user);
         service.save(note);
+
         return "redirect:/notes";
     }
 
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable(name = "id") Long id, Model model) {
-        service.get(id);
-        model.addAttribute("note", service.get(id));
+    public String showEditForm(
+            @AuthenticationPrincipal User user,
+            @PathVariable(name = "id") Long id,
+            Model model)
+    {
+        Note note = service.get(id);
+
+        if (!user.equals(note.getUser())) {
+            throw new ForbiddenException();
+        }
+
+        model.addAttribute("note", note);
         return "notes/edit_note";
     }
 
@@ -130,7 +164,10 @@ public class NoteController {
         if(bindingResult.hasErrors()) {
             return "notes/edit_note";
         }
+
+        note.setUser(user);
         service.save(note);
+
         return "redirect:/notes";
     }
 
@@ -140,7 +177,10 @@ public class NoteController {
         return "redirect:/notes";
     }
 
-
+    @GetMapping("/403")
+    public String get403() {
+        throw new ForbiddenException();
+    }
 
 
 }

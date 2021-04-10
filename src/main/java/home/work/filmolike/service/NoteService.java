@@ -1,8 +1,11 @@
 package home.work.filmolike.service;
 
+import home.work.filmolike.controller.NoteController;
 import home.work.filmolike.domain.Note;
 import home.work.filmolike.domain.User;
 import home.work.filmolike.repository.NoteRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +19,8 @@ import java.time.LocalDateTime;
 @Service
 @Transactional
 public class NoteService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NoteService.class);
+
     private int pageSize = 10;
 
     private final NoteRepo repo;
@@ -34,6 +39,7 @@ public class NoteService {
 
     public void save(Note note) {
         note.setChanged(LocalDateTime.now());
+        LOGGER.info("Save note to db {}", note.toString());
         repo.save(note);
     }
 
@@ -44,5 +50,4 @@ public class NoteService {
     public void delete(long id) {
         repo.deleteById(id);
     }
-
 }
