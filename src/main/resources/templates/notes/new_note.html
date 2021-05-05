@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
+	<meta charset="UTF-8" />
+	<link rel="shortcut icon" type="image/png" href="/images/favicon.png" />
+	<link rel="stylesheet" href="/css/main.css" />
 	<title>Создание заметки</title>
-	<div th:replace="fragments/header :: header-css" />
 </head>
 <body>
-	<div th:replace="fragments/header :: header">
+	<div th:replace="fragments/header :: header-picture">
 		Static header
+	</div>
+	<div th:replace="fragments/header :: header-user">
+		Static header - Добро пожаловать, username
 	</div>
 
 	<div align="center">

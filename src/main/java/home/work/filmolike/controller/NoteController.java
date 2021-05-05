@@ -8,10 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -73,35 +71,6 @@ public class NoteController {
         return "notes/notes";
     }
 
-    @GetMapping("/newpage/page/{pageNum}")
-    public String showNotesWithNewPagination(
-            @AuthenticationPrincipal User user,
-            Model model,
-            @PathVariable("pageNum") int pageNum,
-            @Param("sortField") String sortField,
-            @Param("sortDir") String sortDir,
-            @PageableDefault(sort = { "changed" }, direction = Sort.Direction.DESC) Pageable pageable
-    ) {
-        this.pageNum = pageNum;
-
-        Page<Note> page = service.findSeveral(user, pageNum, sortField, sortDir);
-
-        List<Note> notes = page.getContent();
-
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
-
-        model.addAttribute("notes", notes);
-
-        return "notes/notes";
-    }
-
-
     @GetMapping("/{id}")
     public String showDetails(
             @AuthenticationPrincipal User user,
@@ -134,8 +103,7 @@ public class NoteController {
             return "/notes/new_note";
         }
 
-        note.setUser(user);
-        service.save(note);
+        service.save(note, user);
 
         return "redirect:/notes";
     }
@@ -157,16 +125,18 @@ public class NoteController {
     }
 
     @PutMapping("/{id}")
-    public String updateNote(@AuthenticationPrincipal User user,
-                             @PathVariable("id") Long id,
-                             @ModelAttribute("note") Note note,
-                             BindingResult bindingResult) {
+    public String updateNote(
+            @AuthenticationPrincipal User user,
+            @PathVariable("id") Long id,
+            @Valid Note note,
+            BindingResult bindingResult)
+    {
         if(bindingResult.hasErrors()) {
             return "notes/edit_note";
         }
 
-        note.setUser(user);
-        service.save(note);
+        // TODO rewrite as Rest put
+        service.save(note, user);
 
         return "redirect:/notes";
     }
@@ -175,11 +145,6 @@ public class NoteController {
     public String deleteNote(@PathVariable("id") Long id) {
         service.delete(id);
         return "redirect:/notes";
-    }
-
-    @GetMapping("/403")
-    public String get403() {
-        throw new ForbiddenException();
     }
 
 

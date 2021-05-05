@@ -1,9 +1,11 @@
 package home.work.filmolike.config;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,42 +24,39 @@ public class WebSecurityConfigTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-//	@Test
-//	public void testZeroEndpoint() throws Exception{
-//		this.mockMvc.perform(get("/"))
-//				.andDo(print())
-//				.andExpect(status().isOk())
-//				.andExpect(content().string(containsString("Добро пожаловать на мой пет проект!")));
-//	}
-
 	@Test
-	public void testHomeEndpoint() throws Exception{
-		this.mockMvc.perform(get("/home"))
+	@DisplayName("GET /registration when authenticated then status 403")
+	@WithMockUser(username = "something user", roles={"USER"})
+	void getRegistrationWhen() throws Exception {
+		mockMvc.perform(get("/registration"))
 				.andDo(print())
-				.andExpect(status().isOk())
-				.andExpect(content().string(containsString("Добро пожаловать на мой пет проект!")));
+				.andExpect(status().isForbidden());
 	}
 
 	@Test
+	@DisplayName("when not authenticated then redirect to /login")
 	public void accessDeniedTest() throws Exception {
-		this.mockMvc.perform(get("/notes"))
+		mockMvc.perform(get("/notes"))
 				.andDo(print())
 				.andExpect(status().is3xxRedirection())
 				.andExpect(redirectedUrl("http://localhost/login"));
 	}
 
 	@Test
+	@DisplayName("when authenticating with correct data then redirect /notes")
 	@Sql(value = {"/create-user-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+	@Sql(value = {"/create-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	public void correctLoginTest() throws Exception {
-		this.mockMvc.perform(formLogin().user("u").password("p"))
+		mockMvc.perform(formLogin().user("u").password("p"))
 				.andDo(print())
 				.andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/"));
+				.andExpect(redirectedUrl("/notes"));
 	}
 
 	@Test
+	@DisplayName("when authenticating with incorrect data then status 403")
 	public void badCredentials() throws Exception {
-		this.mockMvc.perform(post("/login").param("username", "user_not_exist"))
+		mockMvc.perform(post("/login").param("username", "user_not_exist"))
 				.andDo(print())
 				.andExpect(status().isForbidden());
 	}

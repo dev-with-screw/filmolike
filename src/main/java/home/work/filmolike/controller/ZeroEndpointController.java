@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.security.Principal;
 
 @Controller
-public class StartPageController {
+public class ZeroEndpointController {
     @GetMapping("/")
     public String redirect(Principal user) {
         if (user == null) {

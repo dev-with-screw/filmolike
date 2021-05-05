@@ -3,7 +3,6 @@ package home.work.filmolike.service;
 import home.work.filmolike.domain.Role;
 import home.work.filmolike.domain.User;
 import home.work.filmolike.repository.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,7 +17,6 @@ public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public UserService(UserRepo userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
@@ -35,7 +33,7 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public boolean addUser(User user) {
+    public boolean isUserAdded(User user) {
         User userFromDb = userRepo.findByUsername(user.getUsername());
 
         if (userFromDb != null) {

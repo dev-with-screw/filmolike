@@ -1,5 +1,6 @@
 package home.work.filmolike.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -18,7 +19,7 @@ public class Note {
     private boolean watched;
     @Enumerated(EnumType.STRING)
     private Estimate estimate;
-    @Basic
+//    @Basic
     private LocalDateTime changed;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -32,6 +33,12 @@ public class Note {
     private Film film;
 
     public Note() {
+    }
+
+    public Note(@NotBlank(message = "Поле не должно быть пустым") @Length(max = 50, message = "Должно содержать не более 50 символов") String title, boolean watched, Estimate estimate) {
+        this.title = title;
+        this.watched = watched;
+        this.estimate = estimate;
     }
 
     public Long getId() {

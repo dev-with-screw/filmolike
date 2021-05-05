@@ -1,23 +1,23 @@
 package home.work.filmolike.controller;
 
-import home.work.filmolike.controller.NoteController;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -31,14 +31,45 @@ public class NoteControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private NoteController noteController;
-
     @Test
-    public void testAuthenticated() throws Exception{
-        this.mockMvc.perform(get("/notes"))
+    @DisplayName("GET /notes  - success")
+    void getNotes_ReturnPageWithTwoNotes() throws Exception{
+        mockMvc.perform(get("/notes"))
                 .andDo(print())
                 .andExpect(authenticated())
-                .andExpect(content().string(containsString("Добро пожаловать, u!")));
+                .andExpect(view().name("notes/notes"))
+                .andExpect(content().string(containsString("Добро пожаловать, u!")))
+                .andExpect(model().attribute("notes", hasSize(2)))
+                .andExpect(model().attribute("notes", hasItem(
+                        allOf(
+                                hasProperty("id", is(1L)),
+                                hasProperty("title", is("Властелин колец - крутой фильм"))
+                        )
+                )))
+                .andExpect(model().attribute("notes", hasItem(
+                        allOf(
+                                hasProperty("id", is(2L)),
+                                hasProperty("title", is("Хочу посмотреть Господин Никто"))
+                        )
+                )));
+    }
+
+    @Test
+    @DisplayName("POST /notes - success")
+    public void saveNoteTest() throws Exception {
+//        Note noteToPost = new Note("New Note", false, Estimate.NOT_ESTIMATE);
+//        Note noteToReturn = new Note("New Note", false, Estimate.NOT_ESTIMATE);
+
+        mockMvc.perform(post("/notes")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("title", "New Note")
+                .param("watched", "false")
+                .param("estimate", "NOT_ESTIMATE")
+                .with(csrf())
+        )
+                .andDo(print())
+                .andExpect(authenticated())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/notes"));
     }
 }

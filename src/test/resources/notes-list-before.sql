@@ -1,5 +1,5 @@
 delete from note;
 
-INSERT INTO Note (id, title, watched, estimate)
-VALUES (1, 'Властелин колец - крутой фильм', true, 4),
-       (2, 'Хочу посмотреть Господин Никто', false, 0);
+INSERT INTO Note (id, title, watched, estimate, user_id)
+VALUES (1, 'Властелин колец - крутой фильм', true, 'GOOD', 1),
+       (2, 'Хочу посмотреть Господин Никто', false, 'NOT_ESTIMATE', 1);

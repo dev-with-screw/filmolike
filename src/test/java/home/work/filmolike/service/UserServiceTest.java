@@ -4,57 +4,77 @@ import home.work.filmolike.domain.Role;
 import home.work.filmolike.domain.User;
 import home.work.filmolike.repository.UserRepo;
 import org.hamcrest.CoreMatchers;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
-//JUnit 4
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
-    @Autowired
+    @Mock
+    private UserRepo userRepo;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @InjectMocks
     private UserService userService;
 
-    @MockBean
-    private UserRepo userRepo;
-
-    @MockBean
-    private PasswordEncoder passwordEncoder;
-
     @Test
-    public void addUser() {
+    @DisplayName("when registrate user with unique username")
+    public void addUserSuccessTest() {
+        //given
+        User user = createNewUser();
+        doReturn(null).when(userRepo).findByUsername(user.getUsername());
+        doReturn("encodedPassword").when(passwordEncoder).encode(any(String.class));
+
+        //when
+        boolean expectedValue = userService.isUserAdded(user);
+
+        //then
+        assertTrue(user.isActive(), "User should be active");
+        assertTrue(CoreMatchers.is(user.getRoles()).matches(Collections.singleton(Role.USER)), "User should get role USER");
+        assertEquals("encodedPassword", user.getPassword(), "Password should be encoded");
+
+        assertTrue(expectedValue, "User should be added to db");
+
+        verify(userRepo, times(1)).save(user);
+    }
+
+    private User createNewUser() {
         User user = new User();
-
-        boolean isUserCreated = userService.addUser(user);
-
-        assertTrue(isUserCreated);
-        assertTrue(CoreMatchers.is(user.getRoles()).matches(Collections.singleton(Role.USER)));
-
-        Mockito.verify(userRepo, Mockito.times(1)).save(user);
+        user.setUsername("user");
+        user.setPassword("pass");
+        return user;
     }
 
     @Test
+    @DisplayName("when try to registrate user with already existed username")
     public void addUserFailTest() {
-        User user = new User();
-        user.setUsername("Existing");
+        //given
+        User actualUser = createNewUser();
+        User expectedUser = createNewUser();
+        doReturn(expectedUser)
+                .when(userRepo).findByUsername(actualUser.getUsername());
 
-        Mockito.doReturn(new User())
-                .when(userRepo)
-                .findByUsername("Existing");
+        //when
+        boolean expectedValue = userService.isUserAdded(actualUser);
 
-        boolean isUserCreated = userService.addUser(user);
+        //then
+        assertFalse(expectedValue);
 
-        assertFalse(isUserCreated);
-
-        Mockito.verify(userRepo, Mockito.times(0)).save(user);
+        verify(userRepo, times(0)).save(actualUser);
     }
+
+
 }

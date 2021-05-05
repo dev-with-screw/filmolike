@@ -35,6 +35,16 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Note> notes;
 
+    public User() {
+    }
+
+    public User(@NotBlank(message = "Поле не должно быть пустым") String username, @NotBlank(message = "Поле не должно быть пустым") String password, boolean active, Set<Role> roles) {
+        this.username = username;
+        this.password = password;
+        this.active = active;
+        this.roles = roles;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

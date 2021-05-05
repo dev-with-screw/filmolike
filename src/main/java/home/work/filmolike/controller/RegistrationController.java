@@ -1,11 +1,9 @@
 package home.work.filmolike.controller;
 
 import home.work.filmolike.domain.User;
-import home.work.filmolike.service.NoteService;
 import home.work.filmolike.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,7 +18,6 @@ public class RegistrationController {
 
     private final UserService userService;
 
-    @Autowired
     public RegistrationController(UserService userService) {
         this.userService = userService;
     }
@@ -46,7 +43,7 @@ public class RegistrationController {
             return "registration";
         }
 
-        boolean isAdded = userService.addUser(user);
+        boolean isAdded = userService.isUserAdded(user);
 
         if (isAdded) {
             return "registration-confirmed";
