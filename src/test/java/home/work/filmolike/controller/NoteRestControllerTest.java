@@ -3,7 +3,7 @@ package home.work.filmolike.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import home.work.filmolike.domain.Estimate;
 import home.work.filmolike.domain.Note;
-import home.work.filmolike.domain.User;
+import home.work.filmolike.dto.NoteConverter;
 import home.work.filmolike.dto.NoteDto;
 import home.work.filmolike.service.NoteService;
 import home.work.filmolike.service.UserService;
@@ -120,7 +120,7 @@ public class NoteRestControllerTest {
     @DisplayName("GET /rest/note/1 - Not Found")
     @WithMockUser
     void testGetNoteByIdNotFound() throws Exception {
-        doReturn(NoteDto.NULL_NOTE).when(noteService).findByIdDto(any());
+        doReturn(NoteConverter.NULL_NOTE).when(noteService).findByIdDto(any());
 
         mockMvc.perform(get("/rest/note/{id}", 1L))
                 .andDo(print())
@@ -211,7 +211,7 @@ public class NoteRestControllerTest {
 
 
     private static NoteDto createNoteDtoWithId(Long id) {
-        NoteDto note = new NoteDto("title", false, Estimate.NOT_ESTIMATE);
+        NoteDto note = new NoteDto("title", "false", "NOT_ESTIMATE");
 
         note.setId(id);
         note.setChanged(LocalDateTime.of(2021, 05, 04, 19, 10, 20, 100));

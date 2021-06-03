@@ -2,11 +2,11 @@ package home.work.filmolike.service;
 
 import home.work.filmolike.domain.Note;
 import home.work.filmolike.domain.User;
+import home.work.filmolike.dto.NoteConverter;
 import home.work.filmolike.dto.NoteDto;
 import home.work.filmolike.repository.NoteRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +51,8 @@ public class NoteService {
         note.setUser(user);
         note.setChanged(LocalDateTime.now());
 
+        LOGGER.info("Saving note: title: {}, watched: {}, estimate: {}", note.getTitle(), note.isWatched(), note.getEstimate());
+
         return noteRepo.save(note);
     }
 
@@ -62,8 +64,6 @@ public class NoteService {
         return noteRepo.findById(id);
     }
 
-
-
     public void delete(long id) {
         noteRepo.deleteById(id);
     }
@@ -71,14 +71,18 @@ public class NoteService {
     public NoteDto findByIdDto(Long id) {
         Optional<Note> noteFromDb = noteRepo.findById(id);
 
-        return noteFromDb.map(NoteDto::toDto).orElse(NoteDto.NULL_NOTE);
+        return noteFromDb.map(NoteConverter::toDto).orElse(NoteConverter.NULL_NOTE);
     }
 
     public List<NoteDto> findAllDto() {
-        return noteRepo.findAll().stream().map(NoteDto::toDto).collect(Collectors.toList());
+        return noteRepo.findAll().stream()
+                .map(NoteConverter::toDto)
+                .collect(Collectors.toList());
     }
 
     public List<NoteDto> findByUser(User user) {
-        return noteRepo.findByUser(user).stream().map(NoteDto::toDto).collect(Collectors.toList());
+        return noteRepo.findByUser(user).stream()
+                .map(NoteConverter::toDto)
+                .collect(Collectors.toList());
     }
 }

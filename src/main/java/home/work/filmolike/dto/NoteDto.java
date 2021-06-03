@@ -3,44 +3,47 @@ package home.work.filmolike.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import home.work.filmolike.domain.Estimate;
 import home.work.filmolike.domain.Note;
+import home.work.filmolike.validation.EnumValidator;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class NoteDto {
     private Long id;
+
+    @NotBlank(message = "Поле не должно быть пустым")
+    @Length(max=50, message = "Должно содержать не более 50 символов")
     private String title;
-    private boolean watched;
-    private Estimate estimate;
+
+    @NotNull
+    @Pattern(regexp = "^true$|^false$", message = "Должно быть true или false")
+    private String watched;
+
+    @EnumValidator(enumClazz = Estimate.class, message = "Должно содержать значение из перечня Estimate")
+    private String estimate;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime changed;
 
     public NoteDto() {
     }
 
-    public NoteDto(String title, boolean watched, Estimate estimate) {
+    public NoteDto(@NotBlank(message = "Поле не должно быть пустым") @Length(max = 50, message = "Должно содержать не более 50 символов") String title, @NotNull @Pattern(regexp = "^true$|^false$", message = "Должно быть true или false") String watched, String estimate) {
         this.title = title;
         this.watched = watched;
         this.estimate = estimate;
     }
 
-    public NoteDto(Long id, String title, boolean watched, Estimate estimate, LocalDateTime changed) {
+    public NoteDto(Long id, @NotBlank(message = "Поле не должно быть пустым") @Length(max = 50, message = "Должно содержать не более 50 символов") String title, @NotNull @Pattern(regexp = "^true$|^false$", message = "Должно быть true или false") String watched, String estimate, LocalDateTime changed) {
         this.id = id;
         this.title = title;
         this.watched = watched;
         this.estimate = estimate;
         this.changed = changed;
-    }
-
-    public static final NoteDto NULL_NOTE = new NoteDto();
-
-    public static NoteDto toDto(Note note) {
-        return new NoteDto() {{
-            setId(note.getId());
-            setTitle(note.getTitle());
-            setWatched(note.isWatched());
-            setEstimate(note.getEstimate());
-            setChanged(note.getChanged());
-        }};
     }
 
     public Long getId() {
@@ -59,19 +62,19 @@ public class NoteDto {
         this.title = title;
     }
 
-    public boolean isWatched() {
+    public String getWatched() {
         return watched;
     }
 
-    public void setWatched(boolean watched) {
+    public void setWatched(String watched) {
         this.watched = watched;
     }
 
-    public Estimate getEstimate() {
+    public String getEstimate() {
         return estimate;
     }
 
-    public void setEstimate(Estimate estimate) {
+    public void setEstimate(String estimate) {
         this.estimate = estimate;
     }
 
@@ -81,5 +84,18 @@ public class NoteDto {
 
     public void setChanged(LocalDateTime changed) {
         this.changed = changed;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NoteDto)) return false;
+        NoteDto noteDto = (NoteDto) o;
+        return id.equals(noteDto.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

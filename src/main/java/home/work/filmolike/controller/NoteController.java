@@ -16,8 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/notes")
@@ -26,11 +26,11 @@ public class NoteController {
 
     private int pageNum = 1;
 
-    private final NoteService service;
+    private final NoteService noteService;
 
     @Autowired
     public NoteController(NoteService service) {
-        this.service = service;
+        this.noteService = service;
     }
 
     @GetMapping
@@ -54,7 +54,7 @@ public class NoteController {
 
         this.pageNum = pageNum;
 
-        Page<Note> page = service.findSeveral(user, pageNum, sortField, sortDir);
+        Page<Note> page = noteService.findSeveral(user, pageNum, sortField, sortDir);
 
         List<Note> notes = page.getContent();
 
@@ -72,20 +72,21 @@ public class NoteController {
     }
 
     @GetMapping("/{id}")
-    public String showDetails(
+    public String showNoteDetails(
             @AuthenticationPrincipal User user,
             @PathVariable("id") Long id,
-            Model model) {
+            Model model)
+    {
+        Optional<Note> noteOptional = noteService.findById(id);
 
-        Note note = service.get(id);
-
-        if (!user.equals(note.getUser())) {
-            throw new ForbiddenException();
+        if(noteOptional.isPresent()) {
+            Note note = noteOptional.get();
+            checkHasRights(note, user);
+            model.addAttribute("note", note);
+            return "notes/note";
+        } else {
+            return "error/404";
         }
-
-        model.addAttribute("note", note);
-
-        return "notes/note";
     }
 
     @GetMapping("/new")
@@ -103,7 +104,7 @@ public class NoteController {
             return "/notes/new_note";
         }
 
-        service.save(note, user);
+        noteService.save(note, user);
 
         return "redirect:/notes";
     }
@@ -114,14 +115,16 @@ public class NoteController {
             @PathVariable(name = "id") Long id,
             Model model)
     {
-        Note note = service.get(id);
+        Optional<Note> noteOptional = noteService.findById(id);
 
-        if (!user.equals(note.getUser())) {
-            throw new ForbiddenException();
+        if(noteOptional.isPresent()) {
+            Note note = noteOptional.get();
+            checkHasRights(note, user);
+            model.addAttribute("note", note);
+            return "notes/edit_note";
+        } else {
+            return "error/404";
         }
-
-        model.addAttribute("note", note);
-        return "notes/edit_note";
     }
 
     @PutMapping("/{id}")
@@ -134,18 +137,38 @@ public class NoteController {
         if(bindingResult.hasErrors()) {
             return "notes/edit_note";
         }
+        Optional<Note> noteOptional = noteService.findById(id);
 
-        // TODO rewrite as Rest put
-        service.save(note, user);
-
-        return "redirect:/notes";
+        if(noteOptional.isPresent()) {
+            Note existingNote = noteOptional.get();
+            checkHasRights(existingNote, user);
+            note.setId(id);
+            noteService.save(note, user);
+            return "redirect:/notes";
+        } else {
+            return "error/404";
+        }
     }
 
     @DeleteMapping("/{id}")
-    public String deleteNote(@PathVariable("id") Long id) {
-        service.delete(id);
-        return "redirect:/notes";
+    public String deleteNote(
+            @AuthenticationPrincipal User user,
+            @PathVariable("id") Long id)
+    {
+        Optional<Note> noteOptional = noteService.findById(id);
+
+        if(noteOptional.isPresent()) {
+            checkHasRights(noteOptional.get(), user);
+            noteService.delete(id);
+            return "redirect:/notes";
+        } else {
+            return "error/404";
+        }
     }
 
-
+    private void checkHasRights(Note note, User user) {
+        if (!user.equals(note.getUser())) {
+            throw new ForbiddenException();
+        }
+    }
 }
