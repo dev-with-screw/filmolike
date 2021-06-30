@@ -1,12 +1,9 @@
 package home.work.filmolike.domain;
 
-import home.work.filmolike.validation.EnumValidator;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +18,6 @@ public class Note {
     private boolean watched;
     @Enumerated(EnumType.STRING)
     private Estimate estimate;
-//    @Basic
     private LocalDateTime changed;
 
     @ManyToOne(fetch = FetchType.EAGER)

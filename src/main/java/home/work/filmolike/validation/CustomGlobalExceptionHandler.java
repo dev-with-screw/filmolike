@@ -43,8 +43,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(body, headers, status);
     }
 
-//    @ExceptionHandler(ConstraintViolationException.class)
-//    public void onConstraintViolationException(HttpServletResponse response) throws IOException {
-//        response.sendError(HttpStatus.BAD_REQUEST.value());
-//    }
+    @ExceptionHandler(ConstraintViolationException.class)
+    public void onConstraintViolationException(HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.BAD_REQUEST.value());
+    }
 }

@@ -16,14 +16,6 @@ public class NoteConverter {
         noteDto.setChanged(note.getChanged());
 
         return noteDto;
-
-//        return new NoteDto() {{
-//            setId(note.getId());
-//            setTitle(note.getTitle());
-//            setWatched(note.isWatched() ? "true" : "false");
-//            setEstimate(note.getEstimate().toString());
-//            setChanged(note.getChanged());
-//        }};
     }
 
     public static Note toDomain(NoteDto noteDto) {
@@ -34,11 +26,5 @@ public class NoteConverter {
         note.setEstimate(Estimate.valueOf(noteDto.getEstimate()));
 
         return note;
-
-//            return new Note() {{
-//            setTitle(noteDto.getTitle());
-//            setWatched(noteDto.getWatched().equals("true"));
-//            setEstimate(Estimate.valueOf(noteDto.getEstimate()));
-//        }};
     }
 }

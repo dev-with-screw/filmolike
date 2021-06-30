@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/registration").not().fullyAuthenticated() //доступ только для незарегистрированных пользователей
+                .antMatchers("/registration").not().fullyAuthenticated() //доступ только для неаутентифицированных пользователей
                 .antMatchers("/", "/home", "/test").permitAll() //доступ разрешен всем пользователям
                 .anyRequest().authenticated() //доступ к остальным страницам только аутентифицированным пользователям
             .and()

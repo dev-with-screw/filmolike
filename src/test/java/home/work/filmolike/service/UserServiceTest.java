@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -39,7 +38,7 @@ public class UserServiceTest {
         doReturn("encodedPassword").when(passwordEncoder).encode(any(String.class));
 
         //when
-        boolean expectedValue = userService.isUserAdded(user);
+        boolean expectedValue = userService.trySaveNewUser(user);
 
         //then
         assertTrue(user.isActive(), "User should be active");
@@ -68,7 +67,7 @@ public class UserServiceTest {
                 .when(userRepo).findByUsername(actualUser.getUsername());
 
         //when
-        boolean expectedValue = userService.isUserAdded(actualUser);
+        boolean expectedValue = userService.trySaveNewUser(actualUser);
 
         //then
         assertFalse(expectedValue);

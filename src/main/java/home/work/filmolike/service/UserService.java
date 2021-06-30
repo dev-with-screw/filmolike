@@ -33,7 +33,7 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public boolean isUserAdded(User user) {
+    public boolean trySaveNewUser(User user) {
         User userFromDb = userRepo.findByUsername(user.getUsername());
 
         if (userFromDb != null) {

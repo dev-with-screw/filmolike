@@ -15,15 +15,15 @@ import java.util.Objects;
 public class NoteDto {
     private Long id;
 
-    @NotBlank(message = "Поле не должно быть пустым")
-    @Length(max=50, message = "Должно содержать не более 50 символов")
+    @NotBlank(message = "Shouldn't be empty")
+    @Length(max=50, message = "Should contain no more than 50 characters")
     private String title;
 
     @NotNull
-    @Pattern(regexp = "^true$|^false$", message = "Должно быть true или false")
+    @Pattern(regexp = "^true$|^false$", message = "Should be true or false")
     private String watched;
 
-    @EnumValidator(enumClazz = Estimate.class, message = "Должно содержать значение из перечня Estimate")
+    @EnumValidator(enumClazz = Estimate.class, message = "Should contain value from enum Estimate")
     private String estimate;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -32,13 +32,13 @@ public class NoteDto {
     public NoteDto() {
     }
 
-    public NoteDto(@NotBlank(message = "Поле не должно быть пустым") @Length(max = 50, message = "Должно содержать не более 50 символов") String title, @NotNull @Pattern(regexp = "^true$|^false$", message = "Должно быть true или false") String watched, String estimate) {
+    public NoteDto(@NotBlank(message = "Shouldn't be empty") @Length(max = 50, message = "Should contain no more than 50 characters") String title, @NotNull @Pattern(regexp = "^true$|^false$", message = "Should be true or false") String watched, String estimate) {
         this.title = title;
         this.watched = watched;
         this.estimate = estimate;
     }
 
-    public NoteDto(Long id, @NotBlank(message = "Поле не должно быть пустым") @Length(max = 50, message = "Должно содержать не более 50 символов") String title, @NotNull @Pattern(regexp = "^true$|^false$", message = "Должно быть true или false") String watched, String estimate, LocalDateTime changed) {
+    public NoteDto(Long id, @NotBlank(message = "Shouldn't be empty") @Length(max = 50, message = "Should contain no more than 50 characters") String title, @NotNull @Pattern(regexp = "^true$|^false$", message = "Should be true or false") String watched, String estimate, LocalDateTime changed) {
         this.id = id;
         this.title = title;
         this.watched = watched;

@@ -43,7 +43,7 @@ public class RegistrationController {
             return "registration";
         }
 
-        boolean isAdded = userService.isUserAdded(user);
+        boolean isAdded = userService.trySaveNewUser(user);
 
         if (isAdded) {
             return "registration-confirmed";
@@ -52,4 +52,6 @@ public class RegistrationController {
             return "registration";
         }
     }
+
+
 }

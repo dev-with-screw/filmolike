@@ -42,6 +42,7 @@ public class NoteController {
         return showNotes(user, model, pageNum, "changed", "desc");
     }
 
+    // TODO гипотетически, нужно бы зарефакторить пагинацию
     @GetMapping("/page/{pageNum}")
     public String showNotes(
             @AuthenticationPrincipal User user,
@@ -58,6 +59,7 @@ public class NoteController {
 
         List<Note> notes = page.getContent();
 
+        // видел реализацию, где передают атрибутом page, а уже в template'е разбирают на атрибуты
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());

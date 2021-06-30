@@ -10,12 +10,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -25,7 +25,7 @@ public class WebSecurityConfigTest {
 	private MockMvc mockMvc;
 
 	@Test
-	@DisplayName("GET /registration when authenticated then status 403")
+	@DisplayName("GET /registration when authenticated - then status 403")
 	@WithMockUser(username = "something user", roles={"USER"})
 	void getRegistrationWhen() throws Exception {
 		mockMvc.perform(get("/registration"))
@@ -34,7 +34,7 @@ public class WebSecurityConfigTest {
 	}
 
 	@Test
-	@DisplayName("when not authenticated then redirect to /login")
+	@DisplayName("GET /notes when not authenticated - then redirect to /login")
 	public void accessDeniedTest() throws Exception {
 		mockMvc.perform(get("/notes"))
 				.andDo(print())
@@ -43,7 +43,7 @@ public class WebSecurityConfigTest {
 	}
 
 	@Test
-	@DisplayName("when authenticating with correct data then redirect /notes")
+	@DisplayName("GET /notes with correct authenticating data - then redirect /notes")
 	@Sql(value = {"/create-user-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(value = {"/create-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	public void correctLoginTest() throws Exception {
@@ -54,7 +54,7 @@ public class WebSecurityConfigTest {
 	}
 
 	@Test
-	@DisplayName("when authenticating with incorrect data then status 403")
+	@DisplayName("POST /login when authenticating with incorrect data - then status 403")
 	public void badCredentials() throws Exception {
 		mockMvc.perform(post("/login").param("username", "user_not_exist"))
 				.andDo(print())
