@@ -5,12 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -54,10 +56,15 @@ public class WebSecurityConfigTest {
 	}
 
 	@Test
-	@DisplayName("POST /login when authenticating with incorrect data - then status 403")
+	@DisplayName("POST /login when authenticating with incorrect data - then redirect")
 	public void badCredentials() throws Exception {
-		mockMvc.perform(post("/login").param("username", "user_not_exist"))
+		mockMvc.perform(post("/login")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("username", "user_not_exist")
+				.param("password", "any_password")
+				.with(csrf()))
 				.andDo(print())
-				.andExpect(status().isForbidden());
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/login?error"));
 	}
 }

@@ -57,9 +57,6 @@ public class NoteControllerIntegrationTest {
     @Test
     @DisplayName("POST /notes - success")
     public void saveNoteTest() throws Exception {
-//        Note noteToPost = new Note("New Note", false, Estimate.NOT_ESTIMATE);
-//        Note noteToReturn = new Note("New Note", false, Estimate.NOT_ESTIMATE);
-
         mockMvc.perform(post("/notes")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("title", "New Note")

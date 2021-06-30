@@ -35,7 +35,6 @@ public class NoteControllerTest {
     @Test
     @DisplayName("POST /notes - success")
     public void saveNoteTest() throws Exception {
-        Note noteToPost = new Note("New Note", false, Estimate.NOT_ESTIMATE);
         Note noteToReturn = new Note("New Note", false, Estimate.NOT_ESTIMATE);
 
         doReturn(noteToReturn).when(noteServiceMock).save(any());
