@@ -20,7 +20,7 @@ class WebMvcConfigTest {
 
     @Test
     @DisplayName("GET /home  - return home.html")
-    void GetHome_shouldReturnHomePage() throws Exception {
+    void getHome_returnHomePage() throws Exception {
         mockMvc.perform(get("/home"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -30,7 +30,7 @@ class WebMvcConfigTest {
 
     @Test
     @DisplayName("GET /login  - return login.html")
-    void GetLogin_shouldReturnLoginPage() throws Exception {
+    void getLogin_returnLoginPage() throws Exception {
         mockMvc.perform(get("/login"))
                 .andDo(print())
                 .andExpect(status().isOk())

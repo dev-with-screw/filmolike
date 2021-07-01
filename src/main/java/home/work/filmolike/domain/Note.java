@@ -5,7 +5,6 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 public class Note {
@@ -23,12 +22,6 @@ public class Note {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
-
-    @OneToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "note")
-    private List<Commentary> commentary;
-    @OneToOne(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "film_id")
-    private Film film;
 
     public Note() {
     }
@@ -85,22 +78,6 @@ public class Note {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public List<Commentary> getCommentary() {
-        return commentary;
-    }
-
-    public void setCommentary(List<Commentary> commentary) {
-        this.commentary = commentary;
-    }
-
-    public Film getFilm() {
-        return film;
-    }
-
-    public void setFilm(Film film) {
-        this.film = film;
     }
 
     @Override

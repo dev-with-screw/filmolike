@@ -42,7 +42,6 @@ public class NoteController {
         return showNotes(user, model, pageNum, "changed", "desc");
     }
 
-    // TODO гипотетически, нужно бы зарефакторить пагинацию
     @GetMapping("/page/{pageNum}")
     public String showNotes(
             @AuthenticationPrincipal User user,
